@@ -7,23 +7,35 @@ use Illuminate\Http\Request;
 use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Support\Facades\App;
 
 class ReviewController extends Controller
 {
-    public function UserReview(StoreReviewRequest $request,User $user)
+    public function UserReview(StoreReviewRequest $request,$id)
     {
         $request->validated();
 
-
-        Review::create([
-            'user_id' => Auth::user()->id,
+        $user = User::find($id);
+        $user->reviews()->create([
+            'reviewer_id' => Auth::id(),
             'rating' => $request->rating,
             'comment' => $request->comment,
-            'reviewable_id' => $request->reviewable_id,
-            'reviewable_type' => "App\Models\User",
         ]);
-
         return response()->json(['message' => 'Review created successfully'], 201);
     }
+
+     public function ProjectReview(StoreReviewRequest $request,$id)
+    {
+        $request->validated();
+        $project = Project::find($id);
+
+        $project->reviews()->create([
+            'reviewer_id' => Auth::id(),
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+        return response()->json(['message' => 'Review created successfully'], 201);
+
+}
 }

@@ -40,19 +40,26 @@ class UserProfileController extends Controller
     ], 200);
 }
 
-    public function UserProfile(User $user)
-    {
-        $userInfo = User::with(['profile:id,user_id,image,intry_date'])
-    ->select('id', 'name', 'email')
-    ->get();
+    public function UserProfile($id)
+{
+    $AvarageRating = User::with('reviews')
+        ->findOrFail($id)
+        ->reviews
+        ->avg('rating');
 
-        return response()->json([
-        'message' => 'User profile retrieved successfully',
+    $userInfo = User::with(['profile' => function ($q) {
+        $q->select('user_id', 'image','intry_date');
+    }])
+    ->select('id', 'name', 'email')
+        ->findOrFail($id);
+
+    return response()->json([
         'user_info' => $userInfo,
+        'average_rating' => $AvarageRating . '⭐',
+        'member since' => $userInfo->profile->intry_date,
     ], 200);
 
-    }
-
+}
 
     /**
      * Store a newly created resource in storage.

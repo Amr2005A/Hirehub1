@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('creator_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
             $table->text('description');
             $table->enum('budget_type', ['fixed', 'hourly']);
-            $table->double('hourly_price');
-            $table->double('fixed_price');
+            $table->double('hourly_price')->nullable();
+            $table->double('fixed_price')->nullable();
             $table->date('date'); //تاريخ التسليم
             $table->enum('status', ['open', 'in_progress', 'closed'])->default('open');
             $table->string('file_path')->nullable();

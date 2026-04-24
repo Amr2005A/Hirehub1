@@ -14,7 +14,7 @@ class ProjectSeeder extends Seeder
     public function run(): void
     {
         Project::create([
-            'creator_by' => 1,
+            'user_id' => 1,
             'title' => 'E-commerce Website',
             'description' => 'Developed a full-featured e-commerce website using Laravel and Vue.js.',
             'budget_type' => 'fixed',

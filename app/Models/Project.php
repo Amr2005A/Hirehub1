@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     protected $fillable = [
-        'creator_by', 'title', 'description', 'budget_type', 'hourly_price', 'fixed_price', 'date', 'status', 'file_path'
+        'user_id', 'title', 'description', 'budget_type', 'hourly_price', 'fixed_price', 'date', 'status', 'file_path'
     ];
 
     public function creatorby()
     {
-        return $this->belongsTo(User::class, 'creator_by');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function tags()

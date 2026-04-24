@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreReviewRequest extends FormRequest
+class UpdateProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,13 @@ class StoreReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string',
-            // 'reviewable_id' => 'required|integer',
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string',
+            'budget_type' => 'sometimes|required|in:hourly,fixed',
+            'hourly_price' => 'required_if:budget_type,hourly|numeric',
+            'fixed_price' => 'required_if:budget_type,fixed|numeric',
+            'date' => 'sometimes|required|date|after:today',
+            'file_path' => 'nullable|string|max:255',
         ];
     }
 }
