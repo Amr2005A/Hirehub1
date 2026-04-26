@@ -60,9 +60,9 @@ class OfferSeeder extends Seeder
 
                 DB::table('offers')->insert([
                     'project_id'      => $project->id,
-                    'creator_by'      => $freelancerId,
+                    'user_id'      => $freelancerId,
                     'suggested_price' => round($basePrice, 2),
-                    'description'     => $descriptions[array_rand($descriptions)],
+                    'cover_letter'     => $descriptions[array_rand($descriptions)],
                     'count_of_days'   => rand(7, 60),
                     'status'          => $status,
                     'file_path'       => null,

@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
-            $table->foreignId('creator_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->double('suggested_price');
-            $table->text('description');
+            $table->text('cover_letter');
             $table->integer('count_of_days');
             $table->enum('status',['accepted','rejected','pending'])->default('pending');
             $table->string('file_path')->nullable();

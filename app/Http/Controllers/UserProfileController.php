@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserProfile;
+use App\Http\Requests\UpdateUserProfileRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\Models\UserProfile;
 use Illuminate\Support\Facades\Auth;
@@ -64,7 +67,7 @@ class UserProfileController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    
+
     public function store(Request $request)
     {
         //
@@ -81,9 +84,25 @@ class UserProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserProfileRequest $request)
     {
-        //
+        $userProfile = $request->validated();
+        $userProfile = User::with('profile')->findOrfail(Auth::user()->id);
+
+        $userProfile->update([
+            'name'=>$request->name ?? $userProfile->name,
+            'city_id'=>$request->city_id ?? $userProfile->city_id,
+            'personal_info'=>$request->personal_info ?? $userProfile->personal_info,
+            'hourly_price'=>$request->hourly_price ?? $userProfile->hourly_price,
+            'phone_number'=>$request->phone_number ?? $userProfile->phone_number,
+            'availability_status'=>$request->availability_status ?? $userProfile->availability_status,
+            'portfolio_link'=>$request->portfolio_link ?? $userProfile->portfolio_link
+        ]);
+
+        return response()->json([
+            'massege'=> 'your profile info updated',
+            'user profile'=>UserResource::make($userProfile)
+        ]);
     }
 
     /**

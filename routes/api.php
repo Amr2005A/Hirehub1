@@ -8,6 +8,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\OfferController;
 
 Route::get('/u', function (Request $request) {
     return $request->user();
@@ -32,6 +33,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/budgetfilter/{value}', [ProjectController::class, 'BudgetFilter']);
     Route::get('allprojects', [ProjectController::class, 'getAllProjects']);
     Route::get('/thismonthfilter', [ProjectController::class, 'ThisMonthFilter']);
+    Route::put('/updateuserprofile',[UserProfileController::class,'update']);
+    Route::post('/createoffer', [OfferController::class, 'store']);
+    Route::get('/projectoffers/{project}', [OfferController::class, 'ShowProjectOffers']);
 });
 
 

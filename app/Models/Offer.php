@@ -8,9 +8,9 @@ class Offer extends Model
 {
     protected $fillable = [
         'project_id',
-        'creator_by',
         'suggested_price',
-        'description',
+        'user_id',
+        'cover_letter',
         'count_of_days',
         'status',
         'file_path'

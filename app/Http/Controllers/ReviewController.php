@@ -16,11 +16,12 @@ class ReviewController extends Controller
     {
         $request->validated();
 
-        $user = User::where('role_id', 2)->first();
+        $user = User::where('role_id', 2)->find($id);
         $user->reviews()->create([
             'reviewer_id' => Auth::id(),
             'rating' => $request->rating,
             'comment' => $request->comment,
+            'reviewable_id' => $id,
         ]);
         return response()->json(['message' => 'Review created successfully'], 201);
     }
