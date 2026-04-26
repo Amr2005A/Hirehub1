@@ -16,7 +16,7 @@ class ReviewController extends Controller
     {
         $request->validated();
 
-        $user = User::find($id);
+        $user = User::where('role_id', 2)->first();
         $user->reviews()->create([
             'reviewer_id' => Auth::id(),
             'rating' => $request->rating,

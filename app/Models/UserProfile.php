@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+
 
 class UserProfile extends Model
 {
@@ -25,4 +27,15 @@ class UserProfile extends Model
     {
         return $this->belongsToMany(Skill::class,'skill_user_profile')->withPivot('years_of_experience')->withTimestamps();
     }
+
+    public function getImageAttribute($value)
+    {
+        return Storage::url($value);
+    }
+
+    public function scopeAvailable($query)
+    {
+        return $query->where('availability_status', 'available');
+    }
+
 }

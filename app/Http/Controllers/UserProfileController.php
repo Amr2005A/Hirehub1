@@ -27,7 +27,7 @@ class UserProfileController extends Controller
 
         $path = $request->file('image')->store('users', 'public');
     } else {
-        $path = 'images/default.jpg';
+        $path = 'images/defult.jpg';
     }
 
     $url = Storage::url($path);
@@ -64,6 +64,7 @@ class UserProfileController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    
     public function store(Request $request)
     {
         //

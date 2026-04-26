@@ -13,13 +13,25 @@ use App\Http\Requests\UpdateProjectRequest;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return ProjectResource::collection(Project::all());
-    }
+    public function index(Request $request)
+{
+    $projects = Project::query()->open()
+
+        ->when($request->min_budget, function ($q) use ($request) {
+            $q->minBudget($request->min_budget);
+        })
+
+        ->when($request->max_budget, function ($q) use ($request) {
+            $q->maxBudget($request->max_budget);
+        })
+
+        ->when($request->this_month, function ($q) {
+            $q->thisMonth();
+        })
+        ->get();
+
+    return response()->json($projects);
+}
 
     /**
      * Store a newly created resource in storage.
@@ -67,6 +79,7 @@ class ProjectController extends Controller
             'fixed_price' => $request->fixed_price,
             'date' => $request->date,
             'file_path' => $request->file_path,
+            'status' => $request->status,
         ]);
         return response()->json([
             'message' => 'Project updated successfully',

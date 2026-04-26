@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\StoreReviewRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +15,21 @@ use App\Models\UserProfile;
 
 class UserController extends Controller
 {
+
+    public function ShowAvaliableFreelancers()
+    {
+        $AvaliableUsers = User::where('role_id', 2)->whereHas('profile', function ($q) {
+            $q->available();
+        })->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')
+        ->get();
+
+
+
+        return response()->json([
+            'message' => 'Avaliable users retrieved successfully',
+            'users' => UserResource::collection($AvaliableUsers),
+        ], 200);
+    }
 
     public function Register(Request $request)
     {
@@ -35,6 +52,8 @@ class UserController extends Controller
             'image' => 'images/default.jpg',
             'intry_date' => now(),
         ]);
+
+        event(new Registered($user));
 
         return response()->json([
             'message' => 'User registered successfully',

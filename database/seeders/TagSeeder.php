@@ -2,19 +2,47 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Tag;
+use Illuminate\Support\Facades\DB;
 
 class TagSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Tag::create([
-            'name' => 'Web Development',
-        ]);
+        $tags = [
+            'PHP',
+            'Laravel',
+            'JavaScript',
+            'Vue.js',
+            'React',
+            'Node.js',
+            'Python',
+            'Django',
+            'Flutter',
+            'Swift',
+            'Kotlin',
+            'MySQL',
+            'PostgreSQL',
+            'MongoDB',
+            'Redis',
+            'Docker',
+            'AWS',
+            'Figma',
+            'Adobe Photoshop',
+            'Adobe Illustrator',
+            'WordPress',
+            'Shopify',
+            'SEO',
+            'UI/UX',
+            'REST API',
+        ];
+
+        foreach ($tags as $tag) {
+            DB::table('tags')->insert([
+                'name'       => $tag,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

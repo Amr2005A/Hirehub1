@@ -2,17 +2,32 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Country;
+use Illuminate\Support\Facades\DB;
 
 class CountrySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Country::create(['name' => 'syria']);
+        $countries = [
+            'سوريا',
+            'لبنان',
+            'الأردن',
+            'العراق',
+            'مصر',
+            'السعودية',
+            'الإمارات',
+            'الكويت',
+            'قطر',
+            'البحرين',
+        ];
+
+        foreach ($countries as $country) {
+            DB::table('countries')->insert([
+                'name' => $country,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

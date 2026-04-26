@@ -2,21 +2,42 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Skill;
+use Illuminate\Support\Facades\DB;
 
 class SkillSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Skill::create(['name' => 'PHP']);
-        Skill::create(['name' => 'C++']);
-        Skill::create(['name' => 'UI/UX Design']);
+        $skills = [
+            'تطوير الويب',
+            'تصميم الجرافيك',
+            'تطوير تطبيقات الموبايل',
+            'التسويق الرقمي',
+            'كتابة المحتوى',
+            'تصميم واجهة المستخدم',
+            'تجربة المستخدم',
+            'قواعد البيانات',
+            'DevOps',
+            'الذكاء الاصطناعي',
+            'تحليل البيانات',
+            'الأمن السيبراني',
+            'تصميم الشعارات',
+            'المونتاج والفيديو',
+            'التصوير الفوتوغرافي',
+            'الترجمة',
+            'إدارة المشاريع',
+            'إدارة وسائل التواصل الاجتماعي',
+            'التجارة الإلكترونية',
+            'تحسين محركات البحث',
+        ];
 
-
+        foreach ($skills as $skill) {
+            DB::table('skills')->insert([
+                'name'       => $skill,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

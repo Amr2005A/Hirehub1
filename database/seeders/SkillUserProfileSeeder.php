@@ -2,33 +2,39 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\UserProfile;
-use App\Models\Skill;
-
-
+use Illuminate\Support\Facades\DB;
 
 class SkillUserProfileSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    public function run(): void
+    {
+        $profiles = DB::table('user_profiles')->pluck('id')->toArray();
+        $skills   = DB::table('skills')->pluck('id')->toArray();
 
-public function run()
-{
-    $profiles = UserProfile::all();
-    $skills = Skill::all();
+        $inserted = [];
 
-    foreach ($profiles as $profile) {
+        foreach ($profiles as $profileId) {
+            $count          = rand(2, 5);
+            $shuffled       = $skills;
+            shuffle($shuffled);
+            $selectedSkills = array_slice($shuffled, 0, $count);
 
-        $randomSkills = $skills->random(3);
+            foreach ($selectedSkills as $skillId) {
+                $key = $profileId . '-' . $skillId;
+                if (isset($inserted[$key])) {
+                    continue;
+                }
+                $inserted[$key] = true;
 
-        foreach ($randomSkills as $skill) {
-            $profile->skills()->attach($skill->id, [
-                'years_of_experience' => rand(1, 5)
-            ]);
+                DB::table('skill_user_profile')->insert([
+                    'user_profile_id'   => $profileId,
+                    'skill_id'          => $skillId,
+                    'years_of_experience' => rand(1, 10),
+                    'created_at'        => now(),
+                    'updated_at'        => now(),
+                ]);
+            }
         }
     }
-}
 }
