@@ -32,6 +32,13 @@ class ProjectResource extends JsonResource
 
             'status' => $this->status,
             'file_path' => $this->file_path,
+
+            'tags' => $this->tags->map(function ($tag) {
+            return [
+                'id' => $tag->id,
+                'name' => $tag->name,
+            ];
+        }),
         ];
     }
 }

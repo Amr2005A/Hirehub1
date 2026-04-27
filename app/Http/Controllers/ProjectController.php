@@ -10,9 +10,11 @@ use App\Http\Resources\ProjecResource;
 use Symfony\Component\HttpKernel\HttpCache\Store;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
-
+use App\Policies\ProjectPolicy;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class ProjectController extends Controller
 {
+        use AuthorizesRequests;
     public function index(Request $request)
 {
     $projects = Project::query()->open()
@@ -38,6 +40,8 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
+        $this->authorize('create',Project::class);
+
         $request->validated();
        $project = Project::create([
         'user_id' => Auth::id(),
@@ -49,8 +53,9 @@ class ProjectController extends Controller
         'date' => $request->date,
         'status' => 'open',
         'file_path' => $request->file_path,
-       ]);
-
+    ]);
+        $tags=$project->tags()->sync($request->tags);
+        $project->load('tags');
        return response()->json([
         'message' => 'Project created successfully',
         'project' => ProjectResource::make($project),
@@ -68,19 +73,28 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProjectRequest $request, Project $project)
+   public function update(UpdateProjectRequest $request, Project $project)
     {
-        $request->validated();
+        $this->authorize('update',$project);
+        $data = $request->validated();
+
         $project->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'budget_type' => $request->budget_type,
-            'hourly_price' => $request->hourly_price,
-            'fixed_price' => $request->fixed_price,
-            'date' => $request->date,
-            'file_path' => $request->file_path,
-            'status' => $request->status,
+            'title' => $data['title'],
+            'description' => $data['description'] ?? $project->description,
+            'budget_type' => $data['budget_type'] ?? $project->budget_type,
+            'hourly_price' => $data['hourly_price'] ?? $project->hourly_price,
+            'fixed_price' => $data['fixed_price'] ?? $project->fixed_price,
+            'date' => $data['date'] ?? $project->date,
+            'file_path' => $data['file_path'] ?? $project->file_path,
+            'status' => $data['status'] ?? $project->status,
         ]);
+
+        if (isset($data['tags'])) {
+            $project->tags()->sync($data['tags']);
+        }
+
+        $project->load('tags');
+
         return response()->json([
             'message' => 'Project updated successfully',
             'project' => ProjectResource::make($project),
@@ -92,6 +106,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $this->authorize('forceDelete',$project);
         Project::destroy($project->id);
         return response()->json([
             'message' => 'Project deleted successfully',

@@ -14,10 +14,13 @@ Route::get('/u', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/register', [UserController::class, 'Register']);
-Route::post('/login', [UserController::class, 'Login']);
+Route::middleware(['log.requests'])->group(function () {
+    Route::post('/register', [UserController::class, 'Register']);
+    Route::post('/login', [UserController::class, 'Login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+});
+
+Route::middleware(['auth:sanctum','log.requests'])->group(function () {
     Route::post('/logout', [UserController::class, 'Logout']);
     Route::get('/user', [UserController::class, 'showProfile']);
     Route::post('/userprofile/image', [UserProfileController::class, 'ImageUpload']);
@@ -26,27 +29,30 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/projectreview/{id}', [ReviewController::class, 'ProjectReview']);
     Route::get('/showavaliableusers', [UserController::class, 'ShowAvaliableFreelancers']);
     Route::get('/showprojects', [ProjectController::class, 'index']);
-    Route::get('/showproject/{project}', [ProjectController::class, 'show']);
-    Route::post('/createproject', [ProjectController::class, 'store']);
-    Route::put('/updateproject/{project}', [ProjectController::class, 'update']);
-    Route::delete('/deleteproject/{project}', [ProjectController::class, 'destroy']);
+    Route::apiResource('projects', ProjectController::class);
     Route::get('/budgetfilter/{value}', [ProjectController::class, 'BudgetFilter']);
-    Route::get('allprojects', [ProjectController::class, 'getAllProjects']);
     Route::get('/thismonthfilter', [ProjectController::class, 'ThisMonthFilter']);
-    Route::put('/updateuserprofile',[UserProfileController::class,'update']);
-    Route::post('/createoffer', [OfferController::class, 'store']);
-    Route::get('/projectoffers/{project}', [OfferController::class, 'ShowProjectOffers']);
+    Route::apiResource('offers', OfferController::class)->except(['store']);
+    Route::get('resent-email',[UserController::class,'reSentEmail']);
+
+    Route::middleware(['verified'])->group(function () {
+         Route::put('/updateuserprofile',[UserProfileController::class,'update']);
+         Route::post('offers',[OfferController::class,'store']);
+   });
 });
 
 
 
 
-Route::post('/email/verification-notification', function (Request $request) {
+Route::get('/logs', function () {
+    return \App\Models\RequestLog::latest()->paginate(20);
+});
+ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return response()->json(['message' => 'Verification link sent']);
-})->middleware(['auth', 'throttle:6,1']);
+    })->middleware(['auth', 'throttle:6,1']);
 
 
-Route::get('/email-verified', function () {
-    return "<h1>Email verified successfully ✅</h1>";
-});
+    Route::get('/email-verified', function () {
+        return "<h1>Email verified successfully ✅</h1>";
+    });

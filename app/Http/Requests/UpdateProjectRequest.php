@@ -30,6 +30,8 @@ class UpdateProjectRequest extends FormRequest
             'fixed_price' => 'required_if:budget_type,fixed|numeric',
             'date' => 'sometimes|required|date|after:today',
             'file_path' => 'nullable|string|max:255',
+            'tags' => 'sometimes|array|min:1|max:5',
+            'tags.*' => 'exists:tags,id',
         ];
     }
 }

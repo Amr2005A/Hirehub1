@@ -93,4 +93,20 @@ class UserController extends Controller
             'message' => 'User logged out successfully'
         ], 200);
     }
+
+    public function reSentEmail()
+    {
+        $user = Auth::user();
+        if ($user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Email already verified.'
+            ], 400);
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return response()->json([
+            'massage' => 'Verification email sent, Check you box!!'
+        ]);
+    }
 }

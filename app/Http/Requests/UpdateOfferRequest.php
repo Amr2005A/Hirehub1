@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProjectRequest extends FormRequest
+class UpdateOfferRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,15 +23,12 @@ class StoreProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'budget_type' => 'required|in:hourly,fixed',
-            'hourly_price' => 'required_if:budget_type,hourly|numeric',
-            'fixed_price' => 'required_if:budget_type,fixed|numeric',
-            'date' => 'required|date|after:today',
+            'suggested_price' => 'nullable|numeric',
+            'cover_letter' => 'nullable|string|max:1000',
+            'count_of_days' => 'nullable|integer',
+            'status' => 'nullable|in:accepted,rejected,pending',
             'file_path' => 'nullable|string|max:255',
-            'tags' => 'required|array|min:1|max:5',
-            'tags.*' => 'exists:tags,id'
+            'created_at' => 'nullable|date',
         ];
     }
 }
