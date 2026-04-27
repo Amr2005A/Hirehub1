@@ -1,60 +1,277 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# HireHub 🚀
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A full-featured freelancing platform REST API built with **Laravel 12**, connecting clients with freelancers through project postings, offers, and reviews.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Table of Contents
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [About the Project](#about-the-project)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [API Endpoints](#api-endpoints)
+- [Authentication](#authentication)
+- [Database Structure](#database-structure)
+- [Project Structure](#project-structure)
+- [License](#license)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## About the Project
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+HireHub is a RESTful API platform designed to connect **clients** who post projects with **freelancers** who submit offers. The platform supports user profiles, skill tagging, reviews, budget filtering, and email verification — providing the core backbone of a modern freelancing marketplace.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## ✨ Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- 🔐 **Authentication** via Laravel Sanctum (register, login, logout, token-based)
+- ✉️ **Email Verification** with resend support
+- 👤 **User Profiles** with image upload and availability status
+- 📁 **Projects** — create, update, delete, and filter by budget or date
+- 💼 **Offers** — freelancers can submit and manage offers on projects
+- ⭐ **Reviews** — rate users and projects with a polymorphic review system
+- 🏷️ **Tags & Skills** — project tagging and freelancer skill management
+- 🌍 **Countries & Cities** — location-aware user profiles
+- 📊 **Request Logging** — all API requests are logged via custom middleware
+- 🔭 **Laravel Telescope** — built-in debugging and monitoring
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🛠️ Tech Stack
 
-## Contributing
+| Layer | Technology |
+|---|---|
+| Framework | Laravel 12 |
+| Auth | Laravel Sanctum |
+| PHP | ^8.2 |
+| Database | MySQL / SQLite |
+| Monitoring | Laravel Telescope |
+| Testing | PHPUnit 11 |
+| Frontend Build | Vite + Node.js |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🚀 Getting Started
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Prerequisites
 
-## Security Vulnerabilities
+- PHP >= 8.2
+- Composer
+- Node.js & npm
+- MySQL or SQLite
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Installation
 
-## License
+1. **Clone the repository**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# Hirehub1
+```bash
+git clone https://github.com/Amr2005A/Hirehub1.git
+cd Hirehub1
+```
+
+2. **Run the setup script** (installs all dependencies, generates key, runs migrations)
+
+```bash
+composer run setup
+```
+
+Or manually:
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan db:seed
+npm install && npm run build
+```
+
+3. **Configure your `.env` file**
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=hirehub
+DB_USERNAME=root
+DB_PASSWORD=
+
+MAIL_MAILER=smtp
+MAIL_HOST=your-mail-host
+MAIL_PORT=587
+MAIL_USERNAME=your@email.com
+MAIL_PASSWORD=your-password
+```
+
+4. **Start the development server**
+
+```bash
+composer run dev
+```
+
+This will concurrently run the Laravel server, queue listener, Pail log viewer, and Vite.
+
+---
+
+## 📡 API Endpoints
+
+### Public Routes
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/register` | Register a new user |
+| POST | `/api/login` | Login and get access token |
+| GET | `/api/logs` | View request logs (paginated) |
+
+### Authenticated Routes (requires `Bearer Token`)
+
+#### User & Profile
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/logout` | Logout current session |
+| GET | `/api/user` | Get authenticated user |
+| GET | `/api/userprofile/{id}` | View a user profile |
+| POST | `/api/userprofile/image` | Upload profile image |
+| PUT | `/api/updateuserprofile` | Update profile *(requires verified email)* |
+| GET | `/api/showavaliableusers` | List available freelancers |
+| GET | `/api/resent-email` | Resend verification email |
+
+#### Projects
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/projects` | List all open projects |
+| POST | `/api/projects` | Create a project |
+| GET | `/api/projects/{id}` | Show a project |
+| PUT | `/api/projects/{id}` | Update a project |
+| DELETE | `/api/projects/{id}` | Delete a project |
+| GET | `/api/budgetfilter/{value}` | Filter projects by budget |
+| GET | `/api/thismonthfilter` | Projects posted this month |
+
+#### Offers
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/offers` | Submit an offer *(requires verified email)* |
+| GET | `/api/offers` | List offers |
+| GET | `/api/offers/{id}` | Show an offer |
+| PUT | `/api/offers/{id}` | Update an offer |
+| DELETE | `/api/offers/{id}` | Delete an offer |
+
+#### Reviews
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/userreview/{id}` | Review a user |
+| POST | `/api/projectreview/{id}` | Review a project |
+
+#### Locations
+| Method | Endpoint | Description |
+|---|---|---|
+| GET/POST | `/api/countries` | List or create countries |
+| GET/PUT/DELETE | `/api/countries/{id}` | Manage a country |
+| GET/POST | `/api/cities` | List or create cities |
+| GET/PUT/DELETE | `/api/cities/{id}` | Manage a city |
+
+---
+
+## 🔐 Authentication
+
+HireHub uses **Laravel Sanctum** for token-based API authentication.
+
+**Register:**
+```json
+POST /api/register
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password",
+  "password_confirmation": "password",
+  "role_id": 2
+}
+```
+
+**Login:**
+```json
+POST /api/login
+{
+  "email": "john@example.com",
+  "password": "password"
+}
+```
+
+**Response:**
+```json
+{
+  "access_token": "1|abc123...",
+  "message": "User logged in successfully"
+}
+```
+
+Use the token in all subsequent requests:
+```
+Authorization: Bearer YOUR_TOKEN_HERE
+```
+
+> ⚠️ Some actions (creating offers, updating profiles) require **email verification**.
+
+---
+
+## 🗄️ Database Structure
+
+| Table | Description |
+|---|---|
+| `users` | Core user accounts with roles and city |
+| `user_profiles` | Extended profile: bio, image, availability, skills |
+| `roles` | User roles (client / freelancer) |
+| `projects` | Client-posted projects with budget and status |
+| `offers` | Freelancer bids on projects |
+| `reviews` | Polymorphic reviews for users and projects |
+| `skills` | Skills catalog linked to freelancer profiles |
+| `tags` | Tags linked to projects |
+| `countries` / `cities` | Location data |
+| `request_logs` | Logged API requests via middleware |
+| `personal_access_tokens` | Sanctum auth tokens |
+
+---
+
+## 🗂️ Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/      # UserController, ProjectController, OfferController...
+│   ├── Middleware/        # LogRequest (request logging)
+│   ├── Requests/          # Form Request validation classes
+│   └── Resources/         # API Resource transformers
+├── Models/                # Eloquent models
+├── Policies/              # Authorization policies
+└── Providers/             # AppServiceProvider, TelescopeServiceProvider
+
+database/
+├── migrations/            # All table migrations
+├── seeders/               # Seeders for roles, skills, tags, countries...
+└── factories/             # UserFactory
+
+routes/
+└── api.php                # All API route definitions
+```
+
+---
+
+## 🧪 Running Tests
+
+```bash
+composer run test
+```
+
+---
+
+## 📜 License
+
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+> Built with ❤️ using Laravel 12
