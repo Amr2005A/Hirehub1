@@ -107,6 +107,7 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $this->authorize('forceDelete',$project);
+
         Project::destroy($project->id);
         return response()->json([
             'message' => 'Project deleted successfully',

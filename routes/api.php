@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\CountryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Models\Country;
 use App\Models\User;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ReviewController;
@@ -34,6 +37,8 @@ Route::middleware(['auth:sanctum','log.requests'])->group(function () {
     Route::get('/thismonthfilter', [ProjectController::class, 'ThisMonthFilter']);
     Route::apiResource('offers', OfferController::class)->except(['store']);
     Route::get('resent-email',[UserController::class,'reSentEmail']);
+    Route::apiResource('/countries',CountryController::class);
+    Route::apiResource('cities',CityController::class);
 
     Route::middleware(['verified'])->group(function () {
          Route::put('/updateuserprofile',[UserProfileController::class,'update']);
