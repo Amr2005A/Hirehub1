@@ -7,13 +7,13 @@ A full-featured freelancing platform REST API built with **Laravel 12**, connect
 ## 📋 Table of Contents
 
 - [About the Project](#about-the-project)
-- [Features](#features)
+- [Features](#-features)
 - [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
+- [Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
-- [API Endpoints](#api-endpoints)
-- [Authentication](#authentication)
+- [API Endpoints](#-api-endpoints)
+- [Authentication](#-authentication)
 - [Database Structure](#database-structure)
 - [Project Structure](#project-structure)
 - [License](#license)
@@ -218,7 +218,7 @@ Authorization: Bearer YOUR_TOKEN_HERE
 
 ---
 
-## 🗄️ Database Structure
+## Database Structure
 
 | Table | Description |
 |---|---|
@@ -236,7 +236,7 @@ Authorization: Bearer YOUR_TOKEN_HERE
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 app/
@@ -260,7 +260,7 @@ routes/
 
 ---
 
-## 🧪 Running Tests
+## Running Tests
 
 ```bash
 composer run test
@@ -268,7 +268,7 @@ composer run test
 
 ---
 
-## 📜 License
+## License
 
 This project is open-source and available under the [MIT License](LICENSE).
 

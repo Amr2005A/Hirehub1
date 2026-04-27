@@ -19,8 +19,18 @@ class OfferController extends Controller
      */
     public function index()
     {
-        //
+        $offers = Offer::with('project')
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'message' => 'Your offers retrieved successfully',
+            'count'   => $offers->count(),
+            'data'    => OfferResource::collection($offers),
+        ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -56,7 +66,7 @@ class OfferController extends Controller
     /**
      * Display the specified resource.
      */
-    public function ShowProjectOffers(Project $project)
+    public function show(Project $project)
     {
         $offers = Offer::where('project_id', $project->id)->get();
         return response()->json([
