@@ -39,6 +39,7 @@ Route::middleware(['auth:sanctum','log.requests'])->group(function () {
     Route::get('resent-email',[UserController::class,'reSentEmail']);
     Route::apiResource('/countries',CountryController::class);
     Route::apiResource('cities',CityController::class);
+    Route::get('stats',[ProjectController::class,'stats']);
 
     Route::middleware(['verified'])->group(function () {
          Route::put('/updateuserprofile',[UserProfileController::class,'update']);

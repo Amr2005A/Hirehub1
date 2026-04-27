@@ -37,42 +37,64 @@ class OfferController extends Controller
      */
     public function store(StoreOfferRequest $request)
     {
-        $this->authorize('create',Offer::class);
-        $offer = $request->validated();
+        $this->authorize('create', Offer::class);
+        $data = $request->validated();
 
         try {
-                $offer=Offer::create([
-                'project_id' => $offer['project_id'],
-                'user_id' => Auth::user()->id,
-                'suggested_price' => $offer['suggested_price'],
-                'cover_letter' => $offer['cover_letter'],
-                'count_of_days' => $offer['count_of_days'],
-                'file_path' => $offer['file_path'] ?? null,
-                'status' => $offer['status'] ?? 'pending',
-             ]);
-            } catch (\Illuminate\Database\QueryException $e) {
-                return response()->json([
-                    'message' => 'You already applied to this project.'
-                ], 400);
-            }
+            $offer = Offer::create([
+                'project_id'    => $data['project_id'],
+                'user_id'       => Auth::id(),
+                'suggested_price'=> $data['suggested_price'],
+                'cover_letter'  => $data['cover_letter'],
+                'count_of_days' => $data['count_of_days'],
+                'file_path'     => $data['file_path'] ?? null,
+                'status'        => 'pending',
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'message' => 'You already applied to this project.',
+            ], 400);
+        }
 
+        $offer->load('project');
 
         return response()->json([
             'message' => 'Offer created successfully',
-            'data' => new OfferResource($offer)
+            'data'    => new OfferResource($offer),
         ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+     public function show(Offer $offer)
     {
-        $offers = Offer::where('project_id', $project->id)->get();
+        $offer->load('project');
+
         return response()->json([
-            'message' => 'Offers retrieved successfully',
-            'data' => OfferResource::collection($offers)
-        ], 200);
+            'message' => 'Offer retrieved successfully',
+            'data'    => new OfferResource($offer),
+        ]);
+    }
+
+    public function ShowProjectOffers(Project $project)
+    {
+        // فقط صاحب المشروع يرى العروض
+        if (Auth::id() !== $project->user_id) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $offers = Offer::with('project')
+            ->where('project_id', $project->id)
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'message' => 'Project offers retrieved successfully',
+            'project' => $project->title,
+            'count'   => $offers->count(),
+            'data'    => OfferResource::collection($offers),
+        ]);
     }
 
     /**
@@ -80,28 +102,47 @@ class OfferController extends Controller
      */
     public function update(UpdateOfferRequest $request, Offer $offer)
     {
-        $request->validated();
-        $offer=Offer::find($offer->id);
+        if (Auth::id() !== $offer->user_id) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        if ($offer->status !== 'pending') {
+            return response()->json([
+                'message' => 'Cannot edit an offer that is already ' . $offer->status,
+            ], 422);
+        }
+
         $offer->update([
-            'suggested_price'=>$request->suggested_price ?? $offer->suggested_price,
-            'cover_letter'=>$request->cover_letter ?? $offer->cover_letter,
-            'count_of_days'=>$request->count_of_days ?? $offer->count_of_days,
-            'file_path'=>$request->file_path ?? $offer->file_path,
+            'suggested_price' => $request->suggested_price ?? $offer->suggested_price,
+            'cover_letter'    => $request->cover_letter    ?? $offer->cover_letter,
+            'count_of_days'   => $request->count_of_days   ?? $offer->count_of_days,
+            'file_path'       => $request->file_path       ?? $offer->file_path,
         ]);
+
+        $offer->load('project');
 
         return response()->json([
             'message' => 'Offer updated successfully',
-            'data' => new OfferResource($offer)
-        ], 200);
+            'data'    => new OfferResource($offer),
+        ]);
     }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Offer $offer)
     {
-            $offer->delete();
+        if (Auth::id() !== $offer->user_id) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        if ($offer->status !== 'pending') {
             return response()->json([
-                'message' => 'Offer deleted successfully'
-            ], 200);
+                'message' => 'Cannot delete an offer that is already ' . $offer->status,
+            ], 422);
+        }
+
+        $offer->delete();
+
+        return response()->json(['message' => 'Offer deleted successfully']);
     }
 }

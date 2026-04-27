@@ -34,11 +34,28 @@ class ProjectResource extends JsonResource
             'file_path' => $this->file_path,
 
             'tags' => $this->tags->map(function ($tag) {
-            return [
-                'id' => $tag->id,
-                'name' => $tag->name,
-            ];
-        }),
+                return [
+                    'id' => $tag->id,
+                    'name' => $tag->name,
+                ];
+            }),
+
+            'offers_count' => $this->offers_count ?? $this->offers()->count(),
+
+            'average_rating' => $this->reviews()->exists()
+                ? round($this->reviews()->avg('rating'), 1) . ' ⭐'
+                : null,
+
+            'reviews' => $this->whenLoaded('reviews', function () {
+                return $this->reviews->map(function ($review) {
+                    return [
+                        'reviewer_id' => $review->reviewer_id,
+                        'rating'      => $review->rating,
+                        'comment'     => $review->comment,
+                        'date'        => $review->created_at->toDateString(),
+                    ];
+                });
+            }),
         ];
     }
 }

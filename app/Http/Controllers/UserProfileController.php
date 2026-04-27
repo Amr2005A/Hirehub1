@@ -86,30 +86,43 @@ class UserProfileController extends Controller
      */
     public function update(UpdateUserProfileRequest $request)
     {
-        $userProfile = $request->validated();
-        $userProfile = User::with('profile')->findOrfail(Auth::user()->id);
+        $authUser    = Auth::user();
+        $userProfile = $authUser->profile;
 
-        $userProfile->update([
-            'name'=>$request->name ?? $userProfile->name,
-            'city_id'=>$request->city_id ?? $userProfile->city_id,
-            'personal_info'=>$request->personal_info ?? $userProfile->personal_info,
-            'hourly_price'=>$request->hourly_price ?? $userProfile->hourly_price,
-            'phone_number'=>$request->phone_number ?? $userProfile->phone_number,
-            'availability_status'=>$request->availability_status ?? $userProfile->availability_status,
-            'portfolio_link'=>$request->portfolio_link ?? $userProfile->portfolio_link
+        // تحديث بيانات الـ user الرئيسية
+        $authUser->update([
+            'name'    => $request->name    ?? $authUser->name,
+            'city_id' => $request->city_id ?? $authUser->city_id,
         ]);
+
+        // تحديث بيانات الـ profile
+        $userProfile->update([
+            'personal_info'       => $request->personal_info       ?? $userProfile->personal_info,
+            'hourly_price'        => $request->hourly_price        ?? $userProfile->hourly_price,
+            'phone_number'        => $request->phone_number        ?? $userProfile->phone_number,
+            'availability_status' => $request->availability_status ?? $userProfile->availability_status,
+            'portfolio_link'      => $request->portfolio_link      ?? $userProfile->portfolio_link,
+        ]);
+
+                if ($request->has('skills') && is_array($request->skills)) {
+                        $syncData = [];
+                        foreach ($request->skills as $skillEntry) {
+                        if (isset($skillEntry['skill_id'])) {
+                         $syncData[$skillEntry['skill_id']] = [
+                        'years_of_experience' => $skillEntry['years_of_experience'] ?? 0,
+                    ];
+                }
+            }
+            $userProfile->skills()->sync($syncData);
+        }
+
+        $updatedUser = User::with(['profile.skills', 'city', 'reviews'])
+            ->withCount('projects')
+            ->findOrFail($authUser->id);
 
         return response()->json([
-            'massege'=> 'your profile info updated',
-            'user profile'=>UserResource::make($userProfile)
+            'message'      => 'Profile updated successfully',
+            'user_profile' => UserResource::make($updatedUser),
         ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

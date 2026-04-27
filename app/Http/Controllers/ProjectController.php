@@ -113,4 +113,30 @@ class ProjectController extends Controller
             'message' => 'Project deleted successfully',
         ], 200);
     }
+
+    public function stats(Request $request)
+    {
+        // فقط admin
+        if ($request->user()->role->name !== 'admin') {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $totalProjects = Project::count();
+        $totalUsers    = \App\Models\User::count();
+        $totalOffers   = \App\Models\Offer::count();
+        $totalValue    = \App\Models\Offer::where('status', 'accepted')->sum('suggested_price');
+
+        $byStatus = Project::selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        return response()->json([
+            'total_users'           => $totalUsers,
+            'total_projects'        => $totalProjects,
+            'total_offers'          => $totalOffers,
+            'accepted_offers_value' => '$' . number_format($totalValue, 2),
+            'projects_by_status'    => $byStatus,
+        ]);
+    }
 }
+
