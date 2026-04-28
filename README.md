@@ -274,4 +274,8 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 ---
 
+## collection link
+https://amrmohissen-3648797.postman.co/workspace/HireHub~9d64bc15-60d9-4533-adab-1326622f4ecf/collection/50416592-083be985-3570-451d-bc31-adf1ed6bcfc8?action=share&source=copy-link&creator=50416592
+
+
 > Built with ❤️ using Laravel 12

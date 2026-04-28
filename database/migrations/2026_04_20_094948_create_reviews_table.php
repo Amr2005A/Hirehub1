@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Review;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,6 +18,7 @@ return new class extends Migration
             $table->integer('rating');
             $table->text('comment');
             $table->integer('reviewable_id');
+            $table->unique('reviewer_id','reviewable_id');
             $table->string('reviewable_type');
             $table->timestamps();
         });
