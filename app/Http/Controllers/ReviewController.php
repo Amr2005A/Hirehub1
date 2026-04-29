@@ -17,12 +17,19 @@ class ReviewController extends Controller
         $request->validated();
 
         $user = User::where('role_id', 2)->find($id);
-        $user->reviews()->create([
+
+        try {
+             $user->reviews()->create([
             'reviewer_id' => Auth::id(),
             'rating' => $request->rating,
             'comment' => $request->comment,
-            'reviewable_id' => $id,
         ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'message' => 'You already rate this user ',
+            ], 400);
+        }
+
         return response()->json(['message' => 'Review created successfully'], 201);
     }
 
@@ -30,12 +37,23 @@ class ReviewController extends Controller
     {
         $request->validated();
         $project = Project::find($id);
+        
 
-        $project->reviews()->create([
+
+        try {
+             $project->reviews()->create([
             'reviewer_id' => Auth::id(),
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'message' => 'You already rate this Poject ',
+            ], 400);
+        }
+
+
         return response()->json(['message' => 'Review created successfully'], 201);
 
 }

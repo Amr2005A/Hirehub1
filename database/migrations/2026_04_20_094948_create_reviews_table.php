@@ -18,8 +18,8 @@ return new class extends Migration
             $table->integer('rating');
             $table->text('comment');
             $table->integer('reviewable_id');
-            $table->unique('reviewer_id','reviewable_id');
             $table->string('reviewable_type');
+            $table->unique(['reviewer_id','reviewable_id','reviewable_type']);
             $table->timestamps();
         });
     }

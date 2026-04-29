@@ -40,11 +40,12 @@ Route::middleware(['auth:sanctum','log.requests'])->group(function () {
     Route::apiResource('/countries',CountryController::class);
     Route::apiResource('cities',CityController::class);
     Route::get('stats',[ProjectController::class,'stats']);
+    Route::put('accept-offer/{offer}',[OfferController::class,'AcceptOffer']);
 
     Route::middleware(['verified'])->group(function () {
          Route::put('/updateuserprofile',[UserProfileController::class,'update']);
          Route::post('offers',[OfferController::class,'store']);
-   });
+        });
 });
 
 

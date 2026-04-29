@@ -145,4 +145,17 @@ class OfferController extends Controller
 
         return response()->json(['message' => 'Offer deleted successfully']);
     }
+
+    public function AcceptOffer(Offer $offer)
+    {
+        $offers = Offer::all()->where('project_id',$offer->project->id);
+        foreach ($offers as $o)
+        {
+            $o->update(['status'=> 'rejected']);
+        }
+        $offer->update(['status'=>'accepted']);
+        $offer->project->update(['status'=>'in_progress']);
+
+        return response()->json(["massege"=>"offer accepted successfully"]);
+    }
 }
